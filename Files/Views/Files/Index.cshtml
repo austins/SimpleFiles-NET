@@ -1,11 +1,12 @@
-﻿@using PagedList.Mvc
+﻿@using PagedList
+@using PagedList.Mvc
 @using File = Files.Models.File
 @model Files.ViewModels.FileViewModels.UploadViewModel
 
 @{
     ViewBag.Title = "Index";
 
-    PagedList.StaticPagedList<File> files = ViewBag.Files;
+    StaticPagedList<File> files = ViewBag.Files;
 }
 
 <div class="panel panel-default">
@@ -16,7 +17,7 @@
 
     <div class="panel-body">
         <div class="hidden-xs">
-            @using (@Html.BeginForm("Upload", "Files", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline" }))
+            @using (@Html.BeginForm("Upload", "Files", FormMethod.Post, new {enctype = "multipart/form-data", @class = "form-inline"}))
             {
                 @Html.ValidationSummary()
 
@@ -54,7 +55,7 @@
                     <td>@Html.DisplayFor(modelItem => item.Name)</td>
                     <td>
                         @{
-                var dateFormatted = @Html.DisplayFor(modelItem => item.Uploaded);
+                            var dateFormatted = @Html.DisplayFor(modelItem => item.Uploaded);
                         }
                         <time title="@dateFormatted (UTC)" datetime="@item.Uploaded.ToString("O")">@dateFormatted</time>
                     </td>
@@ -69,5 +70,5 @@
 
 @if (files != null)
 {
-    @Html.PagedListPager(files, page => Url.Action("Index", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    @Html.PagedListPager(files, page => Url.Action("Index", new {page}), PagedListRenderOptions.ClassicPlusFirstAndLast)
 }
