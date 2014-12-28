@@ -12,6 +12,9 @@ namespace Files.Controllers
         [Route("")]
         public ActionResult Index()
         {
+            if (String.IsNullOrWhiteSpace(Config.Get("Password")))
+                return RedirectToAction("CreatePassword");
+
             if (User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Files");
 
@@ -22,6 +25,9 @@ namespace Files.Controllers
         {
             if (!String.IsNullOrWhiteSpace(Config.Get("Password")))
                 return RedirectToAction("Index");
+
+            if (User.Identity.IsAuthenticated)
+                FormsAuthentication.SignOut();
 
             return View();
         }
