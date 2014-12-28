@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Web;
 using System.Web.Mvc;
+using Files.ViewModels;
 using PagedList;
 using File = Files.Models.File;
 
@@ -16,37 +18,38 @@ namespace Files.Controllers
         [Route("files/{page:int?}")]
         public ActionResult Index(int? page)
         {
-            const string expiryCacheKey = "uploadsFolderLastModified";
-            const short pageSize = 10;
-            var pageIndex = page ?? 1;
-            var filesCacheKey = "files_p" + pageIndex;
-            var uploadsFolderPath = Server.MapPath("~/uploads");
-            var totalFileCount = Directory.EnumerateFiles(uploadsFolderPath).Count();
-            var cache = MemoryCache.Default;
-            var cachedLastModified = Convert.ToDateTime(cache.Get(expiryCacheKey));
-            var files = (StaticPagedList<File>) cache.Get(filesCacheKey);
-            var uploadsFolderLastModified = Directory.GetLastWriteTimeUtc(uploadsFolderPath);
+            ViewBag.Files = Files.Models.File.GetFiles(Server.MapPath("~/uploads"), page ?? 1);
 
-            if ((DateTime.Compare(cachedLastModified, uploadsFolderLastModified) != 0) || files == null)
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Upload(FileViewModels.UploadViewModel upload)
+        {
+            //// Verify that the user selected a file
+            //if (file != null && file.ContentLength > 0)
+            //{
+            //    // extract only the fielname
+            //    var fileName = Path.GetFileName(file.FileName);
+            //    // store the file inside ~/App_Data/uploads folder
+            //    var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
+            //    file.SaveAs(path);
+            //}
+
+            if (ModelState.IsValid)
             {
-                // Reset the cache.
-                foreach (var element in cache)
-                    cache.Remove(element.Key);
-
-                var uploadedFilePaths =
-                    Directory.EnumerateFiles(uploadsFolderPath).Skip(pageSize*(pageIndex - 1)).Take(pageSize);
-
-                var tempFiles = new List<File>();
-                foreach (var path in uploadedFilePaths)
-                    tempFiles.Add(new File(path));
-
-                files = new StaticPagedList<File>(tempFiles, pageIndex, pageSize, totalFileCount);
-
-                cache.Set(expiryCacheKey, uploadsFolderLastModified, ObjectCache.InfiniteAbsoluteExpiration);
-                cache.Set(filesCacheKey, files, ObjectCache.InfiniteAbsoluteExpiration);
+                //if ((upload.File != null) && (upload.File.ContentLength > 0))
+                //{
+                //    var fileName = Path.GetFileName(upload.File.FileName);
+                //    var path = Path.Combine(Server.MapPath("~/uploads"), fileName);
+                //    upload.File.SaveAs(path);
+                //}
             }
 
-            return View(files);
+            ViewBag.Files = Files.Models.File.GetFiles(Server.MapPath("~/uploads"));
+
+            return View("Index", upload);        
         }
     }
 }

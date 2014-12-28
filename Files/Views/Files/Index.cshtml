@@ -1,68 +1,73 @@
 ﻿@using PagedList.Mvc
 @using File = Files.Models.File
-@model PagedList.StaticPagedList<File>
+@model Files.ViewModels.FileViewModels.UploadViewModel
 
 @{
     ViewBag.Title = "Index";
+
+    PagedList.StaticPagedList<File> files = ViewBag.Files;
 }
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <span class="hidden-xs">Upload a File</span><span class="visible-xs">Files</span>
+        <span class="hidden-xs">Upload a File</span>
+        <span class="visible-xs">Files</span>
     </div>
 
     <div class="panel-body">
         <div class="hidden-xs">
-            <p>Upload file here.</p>
+            @using (@Html.BeginForm("Upload", "Files", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline" }))
+            {
+                @Html.ValidationSummary()
+
+                <div class="form-group">
+                    <label for="upload">File input</label>
+                    <input type="file" id="upload" name="File" style="color: inherit;">
+                </div>
+                <p class="help-block">Choose a file to upload here.</p>
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit" class="btn btn-primary">Upload File</button>
+            }
         </div>
 
         <p class="hidden-xs">
-            Allowed file types.
+            Allowed file types: TODO
         </p>
 
-        <p style="font-weight: bold;">
-            Files are not scanned for viruses by the server. Download files at your
-            own risk.
-        </p>
+        <p style="font-weight: bold;">Files are not scanned for viruses by the server. Download files at your own risk.</p>
     </div>
 
-    <table class="table">
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Uploaded (UTC)
-            </th>
-            <th class="text-right">
-                Size
-            </th>
-            <th>
-                Type
-            </th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
+    @if (files != null)
+    {
+        <table class="table">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @{
-                        var dateFormatted = @Html.DisplayFor(modelItem => item.Uploaded);
-                    }
-                    <time title="@dateFormatted (UTC)" datetime="@item.Uploaded.ToString("O")">@dateFormatted</time>
-                </td>
-                <td class="text-right">
-                    @File.FormatSize(item.Size)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>
+                <th>Name</th>
+                <th>Uploaded (UTC)</th>
+                <th class="text-right">Size</th>
+                <th>Type</th>
             </tr>
-        }
-    </table>
+            @foreach (var item in files)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>
+                        @{
+                var dateFormatted = @Html.DisplayFor(modelItem => item.Uploaded);
+                        }
+                        <time title="@dateFormatted (UTC)" datetime="@item.Uploaded.ToString("O")">@dateFormatted</time>
+                    </td>
+                    <td class="text-right">@File.FormatSize(item.Size)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                </tr>
+            }
+        </table>
+    }
+
 </div>
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new {page}), PagedListRenderOptions.ClassicPlusFirstAndLast)
+@if (files != null)
+{
+    @Html.PagedListPager(files, page => Url.Action("Index", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+}
