@@ -1,4 +1,4 @@
-Files
+Simple Files
 =====
 
 File browser developed in C# with ASP.NET MVC for a custom website.
