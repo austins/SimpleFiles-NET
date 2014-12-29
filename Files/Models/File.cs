@@ -33,35 +33,32 @@ namespace Files.Models
 
         public static StaticPagedList<File> GetFiles(string uploadsFolderPath, int pageIndex = 1)
         {
+            const string allFilesCacheKey = "allFiles";
             const string expiryCacheKey = "uploadsFolderLastModified";
             const short pageSize = 10;
-            var filesCacheKey = "files_p" + pageIndex;
             var totalFileCount = Directory.EnumerateFiles(uploadsFolderPath).Count();
             var cache = MemoryCache.Default;
             var cachedLastModified = Convert.ToDateTime(cache.Get(expiryCacheKey));
-            var files = (StaticPagedList<File>) cache.Get(filesCacheKey);
             var uploadsFolderLastModified = Directory.GetLastWriteTimeUtc(uploadsFolderPath);
+            var allFiles = (List<string>) cache.Get(allFilesCacheKey);
 
-            if ((DateTime.Compare(cachedLastModified, uploadsFolderLastModified) != 0) || files == null)
+            if ((allFiles == null) || (DateTime.Compare(cachedLastModified, uploadsFolderLastModified) != 0))
             {
-                // Reset the cache.
-                foreach (var element in cache)
-                    cache.Remove(element.Key);
-
-                var uploadedFilePaths =
-                    Directory.EnumerateFiles(uploadsFolderPath).Skip(pageSize*(pageIndex - 1)).Take(pageSize);
-
-                var tempFiles = new List<File>();
-                foreach (var path in uploadedFilePaths)
-                    tempFiles.Add(new File(path));
-
-                files = new StaticPagedList<File>(tempFiles, pageIndex, pageSize, totalFileCount);
+                allFiles =
+                    Directory.EnumerateFiles(uploadsFolderPath)
+                        .OrderByDescending(f => new FileInfo(f).CreationTimeUtc)
+                        .ToList();
 
                 cache.Set(expiryCacheKey, uploadsFolderLastModified, ObjectCache.InfiniteAbsoluteExpiration);
-                cache.Set(filesCacheKey, files, ObjectCache.InfiniteAbsoluteExpiration);
+                cache.Set(allFilesCacheKey, allFiles, ObjectCache.InfiniteAbsoluteExpiration);
             }
 
-            return files;
+            var uploadedFilePaths = allFiles.Skip(pageSize * (pageIndex - 1)).Take(pageSize);
+            var files = new List<File>();
+            foreach (var path in uploadedFilePaths)
+                files.Add(new File(path));
+
+            return (new StaticPagedList<File>(files, pageIndex, pageSize, totalFileCount));
         }
 
         public static string FormatSize(long size)
