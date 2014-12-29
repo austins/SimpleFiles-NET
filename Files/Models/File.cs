@@ -36,7 +36,6 @@ namespace Files.Models
             const string allFilesCacheKey = "allFiles";
             const string expiryCacheKey = "uploadsFolderLastModified";
             const short pageSize = 10;
-            var totalFileCount = Directory.EnumerateFiles(uploadsFolderPath).Count();
             var cache = MemoryCache.Default;
             var cachedLastModified = Convert.ToDateTime(cache.Get(expiryCacheKey));
             var uploadsFolderLastModified = Directory.GetLastWriteTimeUtc(uploadsFolderPath);
@@ -58,7 +57,7 @@ namespace Files.Models
             foreach (var path in uploadedFilePaths)
                 files.Add(new File(path));
 
-            return (new StaticPagedList<File>(files, pageIndex, pageSize, totalFileCount));
+            return (new StaticPagedList<File>(files, pageIndex, pageSize, allFiles.Count()));
         }
 
         public static string FormatSize(long size)
