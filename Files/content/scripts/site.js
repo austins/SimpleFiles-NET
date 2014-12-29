@@ -2,8 +2,8 @@
     $("time").timeago();
 
     $(".previewImage").click(function() {
-        parent = $(this).parent();
-        fileLink = parent.find("a.fileLink");
+        var parent = $(this).parent();
+        var fileLink = parent.find("a.fileLink");
 
         $("#previewModal .modal-body").html("<div class=\"text-center\">"
             + "<img src=\"" + fileLink.attr("href") + "\" alt=\"" + fileLink.text() + "\""

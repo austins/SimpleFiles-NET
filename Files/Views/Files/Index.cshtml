@@ -16,25 +16,48 @@
     </div>
 
     <div class="panel-body">
-        <div class="hidden-xs">
-            @using (@Html.BeginForm("Upload", "Files", FormMethod.Post, new {enctype = "multipart/form-data", @class = "form-inline"}))
-            {
-                @Html.ValidationSummary()
+        @using (@Html.BeginForm("Index", "Files", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline" }))
+        {
+            <div class="hidden-xs">
+                @if (ViewData.ModelState.Keys.Any(k => ViewData.ModelState[k].Errors.Any()))
+                {
+                    <div class="alert alert-danger">
+                        @Html.ValidationSummary()
+                    </div>
+                }
 
                 <div class="form-group">
                     <label for="upload">File input</label>
                     <input type="file" id="upload" name="File" style="color: inherit;">
+                    <p class="help-block">Choose a file to upload here.</p>
                 </div>
-                <p class="help-block">Choose a file to upload here.</p>
 
                 @Html.AntiForgeryToken()
 
                 <button type="submit" class="btn btn-primary">Upload File</button>
-            }
-        </div>
+            </div>
+        }
 
         <p class="hidden-xs">
-            Allowed file types: TODO
+            Allowed file types:
+            @{
+                string[] fileTypesAllowed = ViewBag.FileTypesAllowed;
+
+                if (fileTypesAllowed != null)
+                {
+                    var totalFileTypesAllowed = fileTypesAllowed.Count();
+
+                    for (int i = 0; i < totalFileTypesAllowed; i++)
+                    {
+                        @Html.Raw(fileTypesAllowed[i])
+
+                        if (i != (totalFileTypesAllowed - 1))
+                        {
+                            @Html.Raw(", ")
+                        }
+                    }
+                }
+            }
         </p>
 
         <p style="font-weight: bold;">Files are not scanned for viruses by the server. Download files at your own risk.</p>
@@ -52,10 +75,16 @@
             @foreach (var item in files)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>
+                        @if (item.Type.StartsWith("image"))
+                        {
+                            @Html.Raw("<button type=\"button\" class=\"btn btn-info btn-xs previewImage\" data-toggle=\"modal\" data-target=\"#previewModal\">Preview</button>")
+                        }
+                        <a href="@Href("~/uploads/" + Path.GetFileName(item.Name))" class="fileLink" target="_blank">@item.Name</a>
+                    </td>
                     <td>
                         @{
-                            var dateFormatted = @Html.DisplayFor(modelItem => item.Uploaded);
+                var dateFormatted = @Html.DisplayFor(modelItem => item.Uploaded);
                         }
                         <time title="@dateFormatted (UTC)" datetime="@item.Uploaded.ToString("O")">@dateFormatted</time>
                     </td>
@@ -64,11 +93,30 @@
                 </tr>
             }
         </table>
+
+        <!-- Modal -->
+        <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Preview</h4>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 
 </div>
 
 @if (files != null)
 {
-    @Html.PagedListPager(files, page => Url.Action("Index", new {page}), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    @Html.PagedListPager(files, page => Url.Action("Index", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
 }

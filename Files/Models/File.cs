@@ -35,7 +35,7 @@ namespace Files.Models
         {
             const string allFilesCacheKey = "allFiles";
             const string expiryCacheKey = "uploadsFolderLastModified";
-            const short pageSize = 10;
+            const short pageSize = 15;
             var cache = MemoryCache.Default;
             var cachedLastModified = Convert.ToDateTime(cache.Get(expiryCacheKey));
             var uploadsFolderLastModified = Directory.GetLastWriteTimeUtc(uploadsFolderPath);
@@ -76,6 +76,9 @@ namespace Files.Models
 
         public static string GetMimeTypeFromFile(string path)
         {
+            if (!System.IO.File.Exists(path))
+                return "";
+
             // Get mime from file credit: http://stackoverflow.com/a/22475295
             const int maxContent = 256;
 

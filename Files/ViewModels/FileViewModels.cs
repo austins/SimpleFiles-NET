@@ -7,7 +7,6 @@ namespace Files.ViewModels
     {
         public class UploadViewModel
         {
-            [Required]
             public HttpPostedFileBase File { get; set; }
         }
     }

@@ -4,3 +4,9 @@
     margin: 0 auto;
     max-width: 450px;
 }
+
+.validation-summary-errors ul {
+    margin-bottom: 0;
+    padding-left: 20px;
+    list-style: square;
+}
