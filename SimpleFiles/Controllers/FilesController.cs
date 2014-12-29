@@ -2,9 +2,9 @@
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Files.ViewModels;
+using SimpleFiles.ViewModels;
 
-namespace Files.Controllers
+namespace SimpleFiles.Controllers
 {
     [Authorize]
     public class FilesController : Controller
@@ -56,7 +56,7 @@ namespace Files.Controllers
                 if (upload.File.ContentLength > _maxFileSize)
                     ModelState.AddModelError("File",
                         "The file you uploaded is too large. The max file size allowed is: " +
-                        Files.Models.File.FormatSize(_maxFileSize));
+                        SimpleFiles.Models.File.FormatSize(_maxFileSize));
 
                 // Only allow certain file formats.
                 var fileType = Models.File.GetMimeTypeFromFile(tempPath);

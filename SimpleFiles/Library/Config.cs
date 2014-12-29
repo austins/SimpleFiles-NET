@@ -4,7 +4,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Files.Library
+namespace SimpleFiles.Library
 {
     public static class Config
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Web;
 
-namespace Files.ViewModels
+namespace SimpleFiles.ViewModels
 {
     public class FileViewModels
     {

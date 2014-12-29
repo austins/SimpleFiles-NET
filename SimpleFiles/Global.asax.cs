@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Files
+namespace SimpleFiles
 {
     public class MvcApplication : HttpApplication
     {

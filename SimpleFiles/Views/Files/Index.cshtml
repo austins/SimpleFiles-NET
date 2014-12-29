@@ -1,7 +1,7 @@
 ﻿@using PagedList
 @using PagedList.Mvc
-@using File = Files.Models.File
-@model Files.ViewModels.FileViewModels.UploadViewModel
+@using File = SimpleFiles.Models.File
+@model SimpleFiles.ViewModels.FileViewModels.UploadViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -83,9 +83,7 @@
                         <a href="@Href("~/uploads/" + Path.GetFileName(item.Name))" class="fileLink" target="_blank">@item.Name</a>
                     </td>
                     <td>
-                        @{
-                var dateFormatted = @Html.DisplayFor(modelItem => item.Uploaded);
-                        }
+                        @{ var dateFormatted = @Html.DisplayFor(modelItem => item.Uploaded); }
                         <time title="@dateFormatted (UTC)" datetime="@item.Uploaded.ToString("O")">@dateFormatted</time>
                     </td>
                     <td class="text-right">@File.FormatSize(item.Size)</td>

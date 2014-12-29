@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Files.ViewModels
+namespace SimpleFiles.ViewModels
 {
     public class EntryViewModels
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Security;
-using Files.Library;
-using Files.ViewModels;
+using SimpleFiles.Library;
+using SimpleFiles.ViewModels;
 
-namespace Files.Controllers
+namespace SimpleFiles.Controllers
 {
     public class EntryController : Controller
     {

@@ -7,7 +7,7 @@ using System.Runtime.Caching;
 using System.Runtime.InteropServices;
 using PagedList;
 
-namespace Files.Models
+namespace SimpleFiles.Models
 {
     public class File
     {
