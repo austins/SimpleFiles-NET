@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var searchTerm = ViewBag.SearchTerm ?? "";
+}
+<!DOCTYPE html>
 <html>
 <head>
     <title>@ViewBag.Title - Files</title>
@@ -28,6 +31,17 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Entry")</li>
             </ul>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form class="navbar-form navbar-left" role="search" method="get">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search file name..." name="search"
+                               value="@searchTerm">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+            }
 
             <ul class="nav navbar-nav navbar-right">
                 @if (User.Identity.IsAuthenticated)

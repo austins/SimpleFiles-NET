@@ -6,7 +6,7 @@
 }
 
 .validation-summary-errors ul {
+    list-style: square;
     margin-bottom: 0;
     padding-left: 20px;
-    list-style: square;
 }

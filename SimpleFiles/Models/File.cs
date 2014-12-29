@@ -31,7 +31,7 @@ namespace SimpleFiles.Models
         [DisplayFormat(DataFormatString = "{0:F}")]
         public DateTime Uploaded { get; set; }
 
-        public static StaticPagedList<File> GetFiles(string uploadsFolderPath, int pageIndex = 1)
+        public static StaticPagedList<File> GetFiles(string uploadsFolderPath, int pageIndex = 1, string searchTerm = "")
         {
             const string allFilesCacheKey = "allFiles";
             const string expiryCacheKey = "uploadsFolderLastModified";
@@ -52,7 +52,15 @@ namespace SimpleFiles.Models
                 cache.Set(allFilesCacheKey, allFiles, ObjectCache.InfiniteAbsoluteExpiration);
             }
 
-            var uploadedFilePaths = allFiles.Skip(pageSize * (pageIndex - 1)).Take(pageSize);
+            IEnumerable<String> uploadedFilePaths = null;
+
+            if (searchTerm != "")
+                uploadedFilePaths = allFiles.Where(f => f.Contains(searchTerm));
+
+            uploadedFilePaths = (uploadedFilePaths == null)
+                ? allFiles.Skip(pageSize*(pageIndex - 1)).Take(pageSize)
+                : uploadedFilePaths.Skip(pageSize*(pageIndex - 1)).Take(pageSize);
+
             var files = new List<File>();
             foreach (var path in uploadedFilePaths)
                 files.Add(new File(path));
