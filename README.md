@@ -1,7 +1,7 @@
 Simple Files
 =====
 
-File browser developed in C# with ASP.NET MVC for a custom website.
+File browser developed in C# with ASP.NET MVC4 for a custom website.
 
 This application basically provides a convenient way for people to upload files to and browse files from a specific folder on your web server.
 
