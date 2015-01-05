@@ -13,7 +13,7 @@ namespace SimpleFiles.Controllers
 
         private readonly string[] _fileTypesAllowed =
         {
-            "image/png", "image/jpeg", "image/pjpeg", "image/gif",
+            "image/png", "image/x-png", "image/jpeg", "image/pjpeg", "image/gif",
             "text/plain", "application/zip", "application/x-rar-compressed", "audio/mpeg"
         };
 
