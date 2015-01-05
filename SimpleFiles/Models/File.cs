@@ -48,7 +48,7 @@ namespace SimpleFiles.Models
             {
                 allFiles =
                     Directory.EnumerateFiles(uploadsFolderPath)
-                        .OrderByDescending(f => new FileInfo(f).CreationTimeUtc)
+                        .OrderByDescending(f => new FileInfo(f).LastWriteTimeUtc)
                         .ToList();
 
                 cache.Set(expiryCacheKey, uploadsFolderLastModified, ObjectCache.InfiniteAbsoluteExpiration);
