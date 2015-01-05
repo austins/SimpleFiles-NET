@@ -19,7 +19,7 @@ namespace SimpleFiles.Models
             Path = path;
             Size = fileInfo.Length;
             Type = GetMimeTypeFromFile(path);
-            Uploaded = fileInfo.CreationTimeUtc;
+            Uploaded = fileInfo.LastWriteTimeUtc;
         }
 
         public string Name { get; set; }
