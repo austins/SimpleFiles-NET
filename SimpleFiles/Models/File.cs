@@ -38,9 +38,12 @@ namespace SimpleFiles.Models
             const short pageSize = 15;
             var cache = MemoryCache.Default;
             var cachedLastModified = Convert.ToDateTime(cache.Get(expiryCacheKey));
-            var uploadsFolderLastModified = Directory.GetLastWriteTimeUtc(uploadsFolderPath);
             var allFiles = (List<string>) cache.Get(allFilesCacheKey);
 
+            if (!Directory.Exists(uploadsFolderPath))
+                Directory.CreateDirectory(uploadsFolderPath);
+
+            var uploadsFolderLastModified = Directory.GetLastWriteTimeUtc(uploadsFolderPath);
             if ((allFiles == null) || (DateTime.Compare(cachedLastModified, uploadsFolderLastModified) != 0))
             {
                 allFiles =
@@ -54,7 +57,7 @@ namespace SimpleFiles.Models
 
             IEnumerable<String> uploadedFilePaths = null;
 
-            if (searchTerm != "")
+            if (!String.IsNullOrWhiteSpace(searchTerm))
                 uploadedFilePaths = allFiles.Where(f => f.Contains(searchTerm));
 
             uploadedFilePaths = (uploadedFilePaths == null)

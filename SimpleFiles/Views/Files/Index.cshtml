@@ -11,7 +11,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        @if (ViewBag.SearchTerm == "")
+        @if (String.IsNullOrWhiteSpace(ViewBag.SearchTerm))
         {
             <span class="hidden-xs">Upload a File</span>
         }
@@ -23,7 +23,7 @@
     </div>
 
     <div class="panel-body">
-        @if (ViewBag.SearchTerm == "")
+        @if (String.IsNullOrWhiteSpace(ViewBag.SearchTerm))
         {
             using (@Html.BeginForm("Index", "Files", FormMethod.Post, new {enctype = "multipart/form-data", @class = "form-inline"}))
              {

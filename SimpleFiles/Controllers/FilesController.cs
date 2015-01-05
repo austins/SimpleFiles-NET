@@ -9,7 +9,7 @@ namespace SimpleFiles.Controllers
     [Authorize]
     public class FilesController : Controller
     {
-        private const long _maxFileSize = 5000000000;
+        private const long MaxFileSize = 5000000000; // 5 GB
 
         private readonly string[] _fileTypesAllowed =
         {
@@ -23,7 +23,7 @@ namespace SimpleFiles.Controllers
         {
             ViewBag.FileTypesAllowed = _fileTypesAllowed;
 
-            ViewBag.SearchTerm = "";
+            ViewBag.SearchTerm = null;
             if (!String.IsNullOrWhiteSpace(Request.QueryString["search"]))
                 ViewBag.SearchTerm = Request.QueryString["search"].Trim();
 
@@ -63,10 +63,10 @@ namespace SimpleFiles.Controllers
                     ModelState.AddModelError("File", "A file with the name \"" + fileName + "\" already exists.");
 
                 // Check file size.
-                if (upload.File.ContentLength > _maxFileSize)
+                if (upload.File.ContentLength > MaxFileSize)
                     ModelState.AddModelError("File",
                         "The file you uploaded is too large. The max file size allowed is: " +
-                        Models.File.FormatSize(_maxFileSize));
+                        Models.File.FormatSize(MaxFileSize));
 
                 // Only allow certain file formats.
                 var fileType = Models.File.GetMimeTypeFromFile(tempPath);
