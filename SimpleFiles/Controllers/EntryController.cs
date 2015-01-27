@@ -59,6 +59,9 @@ namespace SimpleFiles.Controllers
             if (String.IsNullOrWhiteSpace(Config.Get("Password")))
                 return RedirectToAction("CreatePassword");
 
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Files");
+
             return View();
         }
 
