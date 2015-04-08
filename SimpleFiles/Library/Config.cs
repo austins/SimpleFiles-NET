@@ -65,6 +65,11 @@ namespace SimpleFiles.Library
             }
         }
 
+        /// <summary>
+        /// Accessor for a specific config property.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Value of config property if it exists; null if it doesn't exist.</returns>
         public static string Get(string name)
         {
             CreateConfig();
@@ -74,7 +79,7 @@ namespace SimpleFiles.Library
             var element = (from c in xDoc.Root.Elements(name)
                 select c).SingleOrDefault();
 
-            var value = "";
+            string value = null;
             if (element != null)
                 value = element.Value;
 
