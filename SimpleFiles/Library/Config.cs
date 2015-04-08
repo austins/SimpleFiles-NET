@@ -11,7 +11,7 @@ namespace SimpleFiles.Library
         public static string Password
         {
             get { return Get("Password"); }
-            set { Set("Installed", value); }
+            set { Set("Password", value); }
         }
 
         private static void CreateConfig()
